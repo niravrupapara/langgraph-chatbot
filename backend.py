@@ -4,12 +4,12 @@ from langchain_core.messages import BaseMessage ,SystemMessage, HumanMessage , A
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph.message import add_messages
 from mistralai import Mistral
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 import os
 
 
-# load_dotenv()
+load_dotenv()
 
 API_KEY = os.getenv("MISTRAL_API_KEY")
 MODEL = os.getenv("MISTRAL_MODEL")
