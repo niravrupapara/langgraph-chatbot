@@ -1,7 +1,9 @@
 from langgraph.graph import StateGraph, START, END
 from typing import TypedDict, Annotated
 from langchain_core.messages import BaseMessage ,SystemMessage, HumanMessage , AIMessage
-from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
+import sqlite3
+
 from langgraph.graph.message import add_messages
 from mistralai import Mistral
 from dotenv import load_dotenv
@@ -57,7 +59,18 @@ def chat_with_mistral(state: ChatState):
     }
 
 
-checkpointer = InMemorySaver()
+
+connection = sqlite3.connect("chatbot_state.db" , check_same_thread=False)
+
+checkpointer = SqliteSaver(conn=connection)
+
+def retrive_all_states():
+    all_states = set()
+
+    for checkpoint in checkpointer.list(None):
+        all_states.add(checkpoint.config['configurable']['thread_id'])
+
+    return list(all_states)
 
 graph = StateGraph(ChatState)
 
